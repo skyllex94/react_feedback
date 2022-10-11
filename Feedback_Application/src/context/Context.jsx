@@ -33,7 +33,7 @@ export const ContextProvider = ({ children }) => {
     });
 
     const data = await response.json();
-    setFeedback([data, ...feedback]);
+    setFeedback([...feedback, data]);
   };
 
   const deleteFeedback = async (id) => {
