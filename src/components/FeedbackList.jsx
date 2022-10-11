@@ -1,14 +1,21 @@
-import React from "react";
 import FeedbackItem from "./FeedbackItem";
+import { useContext } from "react";
+import GlobalContext from "../context/Context";
+import Spinner from "./shared/Spinner";
 
-function FeedbackList({ feedback, deleteItem }) {
-  if (!feedback || feedback.length === 0) {
+function FeedbackList() {
+  const { feedback, isLoading } = useContext(GlobalContext);
+
+  if ((!feedback || feedback.length === 0) && !isLoading) {
     return <p>No Feedback Yet</p>;
   }
-  return (
+
+  return isLoading ? (
+    <h3>{Spinner}</h3>
+  ) : (
     <div className="feedback-list">
-      {feedback.map((curr, index) => (
-        <FeedbackItem key={curr.id} item={curr} deleteItem={deleteItem} />
+      {feedback.map((curr) => (
+        <FeedbackItem key={curr.id} item={curr} />
       ))}
     </div>
   );

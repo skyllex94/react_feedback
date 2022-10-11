@@ -1,6 +1,9 @@
-import React from "react";
+import { useContext } from "react";
+import GlobalContext from "../context/Context";
 
-function FeedbackStats({ feedback }) {
+function FeedbackStats() {
+  const { feedback } = useContext(GlobalContext);
+
   let averageRating =
     feedback.reduce((accumulator, curr) => {
       return accumulator + curr.rating;
