@@ -9,44 +9,72 @@ const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
 export const GithubProvider = ({ children }) => {
   const initState = {
     users: [],
+    user: {},
     isLoading: false,
   };
 
   const [state, dispatch] = useReducer(githubReducer, initState);
 
-  // Get init users (testing only)
+  // Search for users
   const searchUsers = async (text) => {
     setLoading();
     const params = new URLSearchParams({
       q: text,
     });
 
-    const response = await fetch(`${GITHUB_URL}/search/users/?${params}`, {
+    const response = await fetch(`${GITHUB_URL}/search/users?${params}`, {
       headers: {
         Authorization: `token ${GITHUB_TOKEN}`,
       },
     });
 
-    console.log(response);
     const { items } = await response.json();
 
     dispatch({
       type: "GET_USERS",
       payload: items,
     });
-    dispatch(false);
   };
 
   const setLoading = () => {
     dispatch({ type: "SET_LOADING" });
   };
 
+  const clearUsers = () => {
+    dispatch({ type: "CLEAR_USERS" });
+  };
+
+  // Get single user
+  const getUser = async (searchedUsername) => {
+    setLoading();
+
+    const response = await fetch(`${GITHUB_URL}/users/${searchedUsername}`, {
+      headers: {
+        Authorization: `token ${GITHUB_TOKEN}`,
+      },
+    });
+
+    if (response.status === 404) {
+      window.location = "/notfound";
+    } else {
+      const data = await response.json();
+
+      dispatch({
+        type: "GET_USER",
+        payload: data,
+      });
+    }
+  };
+
   return (
     <GithubContext.Provider
       value={{
         users: state.users,
+        user: state.user,
         isLoading: state.isLoading,
         searchUsers,
+        clearUsers,
+        getUser,
       }}
     >
       {children}

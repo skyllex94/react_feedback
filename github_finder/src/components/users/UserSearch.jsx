@@ -1,9 +1,12 @@
 import { useState, useContext } from "react";
 import GithubContext from "../../context/github/GithubContext";
+import AlertContext from "../../context/alert/AlertContext";
+import UserResults from "./UserResults";
 
 function UserSearch() {
   const [text, setText] = useState("");
-  const { users, searchUsers } = useContext(GithubContext);
+  const { users, searchUsers, clearUsers } = useContext(GithubContext);
+  const { setAlert } = useContext(AlertContext);
 
   const handleChange = (event) => {
     setText(event.target.value);
@@ -12,7 +15,7 @@ function UserSearch() {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (text === "") {
-      alert("Please enter username");
+      setAlert("Please enter username", "error");
     } else {
       searchUsers(text);
       setText("");
@@ -20,29 +23,37 @@ function UserSearch() {
   };
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-2 lg:grid-cols-2 md:cols-2 mb-8 gap-8">
-      <div>
-        <form onSubmit={handleSubmit}>
-          <div className="form-control">
-            <div className="relative">
-              <input
-                type="text"
-                className="w-full pr-40 bg-gray-200 input input-lg text-black"
-                placeholder="Search"
-                value={text}
-                onChange={handleChange}
-              />
-              <button
-                type="submit"
-                className="absolute top-0 right-0 rounded-l-none w-36 btn btn-lg"
-              >
-                GO
-              </button>
+    <>
+      <div className="grid grid-cols-1 xl:grid-cols-2 lg:grid-cols-2 md:cols-2 mb-8 gap-8">
+        <div>
+          <form onSubmit={handleSubmit}>
+            <div className="form-control">
+              <div className="relative">
+                <input
+                  type="text"
+                  className="w-full pr-40 bg-gray-200 input input-lg text-black"
+                  placeholder="Search"
+                  value={text}
+                  onChange={handleChange}
+                />
+                <button
+                  type="submit"
+                  className="absolute top-0 right-0 rounded-l-none w-36 btn btn-lg"
+                >
+                  GO
+                </button>
+              </div>
             </div>
+          </form>
+        </div>
+        {users.length > 0 && (
+          <div onClick={clearUsers} className="btn btn-ghost btn-lg">
+            Clear
           </div>
-        </form>
+        )}
       </div>
-    </div>
+      <UserResults className="w-full" />
+    </>
   );
 }
 
