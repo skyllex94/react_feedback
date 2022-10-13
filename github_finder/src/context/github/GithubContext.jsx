@@ -10,6 +10,7 @@ export const GithubProvider = ({ children }) => {
   const initState = {
     users: [],
     user: {},
+    repos: [],
     isLoading: false,
   };
 
@@ -22,7 +23,6 @@ export const GithubProvider = ({ children }) => {
       q: text,
     });
 
-    console.log(GITHUB_TOKEN);
     const response = await fetch(`${GITHUB_URL}/search/users?${params}`, {
       headers: {
         Authorization: `token ${GITHUB_TOKEN}`,
@@ -67,15 +67,34 @@ export const GithubProvider = ({ children }) => {
     }
   };
 
+  const getRepos = async (username) => {
+    setLoading();
+
+    const response = await fetch(`${GITHUB_URL}/users/${username}/repos`, {
+      headers: {
+        Authorization: `token ${GITHUB_TOKEN}`,
+      },
+    });
+
+    const data = await response.json();
+
+    dispatch({
+      type: "GET_REPOS",
+      payload: data,
+    });
+  };
+
   return (
     <GithubContext.Provider
       value={{
         users: state.users,
         user: state.user,
+        repos: state.repos,
         isLoading: state.isLoading,
         searchUsers,
         clearUsers,
         getUser,
+        getRepos,
       }}
     >
       {children}

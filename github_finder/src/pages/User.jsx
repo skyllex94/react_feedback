@@ -2,18 +2,26 @@ import React, { useEffect } from "react";
 import { useContext } from "react";
 import GithubContext from "../context/github/GithubContext";
 import { useParams } from "react-router-dom";
-import { FaCodepen, FaStorem, FaUserFriends, FaUsers } from "react-icons/fa";
+import {
+  FaCodepen,
+  FaStore,
+  FaUser,
+  FaUserFriends,
+  FaUsers,
+} from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Spinner from "../components/layout/Spinner";
+import RepoList from "../components/repos/RepoList";
 
 function User() {
-  const { user, getUser, isLoading } = useContext(GithubContext);
+  const { user, getUser, repos, getRepos, isLoading } =
+    useContext(GithubContext);
 
   const params = useParams();
 
   useEffect(() => {
     getUser(params.login);
-    // getUserRepos(params.login)
+    getRepos(params.login);
   }, []);
 
   const {
@@ -53,7 +61,104 @@ function User() {
               </figure>
             </div>
           </div>
+          <div className="col-span-2">
+            <div className="mb-6">
+              <h1 className="text-3xl card-title">
+                {name}
+                <div className="ml-2 mr-1 mt-2 badge badge-success">{type}</div>
+                {hireable && (
+                  <div className="mx-1 mt-2 badge badge-info">Hireable</div>
+                )}
+              </h1>
+              <p>{bio}</p>
+              <div className="mt-4 card-actions">
+                <a
+                  href={html_url}
+                  className="btn btn-outline"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Visit Github Profile
+                </a>
+              </div>
+            </div>
+            <div className="w-full rouded-lg shadow-md bg-base-100 stats">
+              {location && (
+                <div className="stat">
+                  <div className="stat-title text-md">Location:</div>
+                  <div className="text-lg stat-value">{location}</div>
+                </div>
+              )}
+              {blog && (
+                <div className="stat">
+                  <div className="stat-title text-md">Website:</div>
+                  <div className="text-lg stat-value">
+                    <a
+                      href={`https://${blog}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {`https://api.github.com/users/${login}/repos`}
+                    </a>
+                  </div>
+                </div>
+              )}
+              {twitter_username && (
+                <div className="stat">
+                  <div className="stat-title text-md">Twitter:</div>
+                  <div className="text-lg stat-value">
+                    <a
+                      href={`https://${twitter_username}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {twitter_username}
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
+        <div className="w-full py-5 mb-6 rounded-lg shadow-md bg-base-100 stats">
+          <div className="stat">
+            <div className="stat-figure text-secondary">
+              <FaUsers className="text-3xl md:text-5xl" />
+            </div>
+            <div className="stat-title pr-5">Followers</div>
+            <div className="stat-value pr-5 text-3xl md:text-4xl">
+              {followers}
+            </div>
+          </div>
+          <div className="stat">
+            <div className="stat-figure text-secondary">
+              <FaUserFriends className="text-3xl md:text-5xl" />
+            </div>
+            <div className="stat-title pr-5">Following</div>
+            <div className="stat-value pr-5 text-3xl md:text-4xl">
+              {following}
+            </div>
+          </div>
+          <div className="stat">
+            <div className="stat-figure text-secondary">
+              <FaCodepen className="text-3xl md:text-5xl" />
+            </div>
+            <div className="stat-title pr-5">Public Repos</div>
+            <div className="stat-value pr-5 text-3xl md:text-4xl">
+              {public_repos}
+            </div>
+          </div>
+          {/* <div className="stat">
+            <div className="stat-figure text-secondary">
+              <FaStore className="text-3xl md:text-5xl" />
+            </div>
+            <div className="stat-title pr-5">Public Gists</div>
+            <div className="stat-value pr-5 text-3xl md:text-4xl">
+              {public_gists}
+            </div>
+          </div> */}
+        </div>
+        <RepoList repos={repos} />
       </div>
     </React.Fragment>
   );
