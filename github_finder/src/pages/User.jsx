@@ -12,16 +12,21 @@ import {
 import { Link } from "react-router-dom";
 import Spinner from "../components/layout/Spinner";
 import RepoList from "../components/repos/RepoList";
+import { getUserAndRepos } from "../context/GithubActions";
 
 function User() {
-  const { user, getUser, repos, getRepos, isLoading } =
-    useContext(GithubContext);
+  const { user, repos, dispatch, isLoading } = useContext(GithubContext);
 
   const params = useParams();
 
   useEffect(() => {
-    getUser(params.login);
-    getRepos(params.login);
+    dispatch({ type: "SET_LOADING" });
+    const getUserData = async () => {
+      const userData = await getUserAndRepos(params.login);
+      dispatch({ type: "GET_USER_AND_REPOS", payload: userData });
+    };
+
+    getUserData();
   }, []);
 
   const {
@@ -148,15 +153,6 @@ function User() {
               {public_repos}
             </div>
           </div>
-          {/* <div className="stat">
-            <div className="stat-figure text-secondary">
-              <FaStore className="text-3xl md:text-5xl" />
-            </div>
-            <div className="stat-title pr-5">Public Gists</div>
-            <div className="stat-value pr-5 text-3xl md:text-4xl">
-              {public_gists}
-            </div>
-          </div> */}
         </div>
         <RepoList repos={repos} />
       </div>

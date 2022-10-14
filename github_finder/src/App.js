@@ -8,6 +8,7 @@ import { GithubProvider } from "./context/github/GithubContext";
 import { AlertProvider } from "./context/alert/AlertContext";
 import Alert from "./components/layout/Alert";
 import User from "./pages/User";
+import Sandbox from "./pages/Sandbox";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
               <Route path="/user/:login" element={<User />} />
               <Route path="/notfound" element={<NotFound />} />
               <Route path="/*" element={<NotFound />} />
+              <Route path="/sandbox" element={<Sandbox />} />
             </Routes>
           </main>
           <Footer />
