@@ -8,6 +8,11 @@ import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import Navbar from "./components/Navbar";
 
+import PrivateRoute from "./components/PrivateRoute";
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function App() {
   return (
     <React.Fragment>
@@ -15,13 +20,16 @@ function App() {
         <Routes>
           <Route path="/" element={<Explore />} />
           <Route path="/offers" element={<Offers />} />
-          <Route path="/profile" element={<Signin />} />
+          <Route path="profile" element={<PrivateRoute />}>
+            <Route path="/profile" element={<Profile />} />
+          </Route>
           <Route path="/signin" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgotpass" element={<ForgotPassword />} />
         </Routes>
         <Navbar />
       </Router>
+      <ToastContainer />
     </React.Fragment>
   );
 }

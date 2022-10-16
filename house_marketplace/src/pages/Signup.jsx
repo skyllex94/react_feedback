@@ -10,6 +10,9 @@ import {
 import { db } from "../firebase.config";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
+import { toast } from "react-toastify";
+import OAuth from "../components/OAuth";
+
 function Signup() {
   const [showPass, setShowPass] = useState(false);
   const [formData, setFormData] = useState({
@@ -52,7 +55,7 @@ function Signup() {
       // Redirect back to main page
       navigate("/");
     } catch (error) {
-      console.log(error);
+      toast.error("Something went wrong");
     }
   };
 
@@ -110,6 +113,7 @@ function Signup() {
           </form>
 
           {/*  Google Auth  */}
+          <OAuth />
 
           <Link to="/signIn" className="registerLink">
             Log in

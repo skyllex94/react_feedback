@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ReactComponent as ArrowRightIcon } from "../assets/svg/keyboardArrowRightIcon.svg";
 import visibilityIcon from "../assets/svg/visibilityIcon.svg";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
+import { toast } from "react-toastify";
+import OAuth from "../components/OAuth";
 
 function Signin() {
   const [showPass, setShowPass] = useState(false);
@@ -20,6 +24,24 @@ function Signin() {
     }));
   };
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const auth = getAuth();
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      if (userCredential.user) {
+        navigate("/");
+      }
+    } catch (error) {
+      toast.error(`${error}`);
+    }
+  };
+
   return (
     <>
       <div className="pageContainer">
@@ -28,7 +50,7 @@ function Signin() {
         </header>
 
         <main>
-          <form>
+          <form onSubmit={onSubmit}>
             <input
               type="email"
               className="emailInput"
@@ -66,6 +88,7 @@ function Signin() {
           </form>
 
           {/*  Google Auth  */}
+          <OAuth />
 
           <Link to="/signup" className="registerLink">
             Create an Account
