@@ -12,6 +12,7 @@ import PrivateRoute from "./components/PrivateRoute";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Category from "./pages/Category";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/signin" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgotpass" element={<ForgotPassword />} />
+          <Route path="/category/:categoryName" element={<Category />} />
         </Routes>
         <Navbar />
       </Router>
