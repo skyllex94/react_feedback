@@ -4,8 +4,8 @@ import { ReactComponent as deleteIcon } from "../assets/svg/deleteIcon.svg";
 import bedIcon from "../assets/svg/bedIcon.svg";
 import bathtubIcon from "../assets/svg/bathtubIcon.svg";
 
-function ListingItem({ listing, id }) {
-  // Regulart expression for adding commas every 3 numbers
+function ListingItem({ listing, id, onDelete }) {
+  // Regular expression for adding commas every 3 numbers
   //   const regex = /\B(?=(\d{3})+(?!\d))/g;
   //   const regPrice = listing.regularPrice
   //     .toString()
@@ -29,11 +29,36 @@ function ListingItem({ listing, id }) {
           <p className="categoryListingPrice">
             $
             {listing.offer
-              ? listing.regularPrice.toLocaleString()
+              ? listing.discountPrice.toLocaleString()
               : listing.regularPrice.toLocaleString()}
+            {listing.type === "rent" && " per month"}
           </p>
+
+          <div className="categoryListingInfoDiv">
+            <img src={bedIcon} alt="bed" />
+            <p className="categoryListingInfoText">
+              {listing.bedrooms > 1
+                ? `${listing.bedrooms} Bedrooms`
+                : "1 Bedroom"}
+            </p>
+
+            <img src={bathtubIcon} alt="bath" />
+            <p className="categoryListingInfoText">
+              {listing.bathrooms > 1
+                ? `${listing.bathrooms} Bathrooms`
+                : "1 Bathroom"}
+            </p>
+          </div>
         </div>
       </Link>
+
+      {onDelete && (
+        <deleteIcon
+          className="removeIcon"
+          fill="rgb(231, 76, 60)"
+          onClick={() => onDelete(listing.id, listing.name)}
+        />
+      )}
     </li>
   );
 }
